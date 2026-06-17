@@ -1,0 +1,226 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Cart Promo Service API",
+        "description": "API Documentation for Cart Promo Service",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/api/v1/products": {
+            "get": {
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Get list products",
+                "operationId": "getProducts",
+                "responses": {
+                    "200": {
+                        "description": "Products retrieved successfully"
+                    }
+                }
+            }
+        },
+        "/api/v1/carts": {
+            "post": {
+                "tags": [
+                    "Carts"
+                ],
+                "summary": "Create cart item",
+                "operationId": "createCart",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "user_id",
+                                    "product_id",
+                                    "quantity",
+                                    "price"
+                                ],
+                                "properties": {
+                                    "user_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "product_id": {
+                                        "type": "integer",
+                                        "example": 101
+                                    },
+                                    "quantity": {
+                                        "type": "integer",
+                                        "example": 2
+                                    },
+                                    "price": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 50000
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Cart created successfully"
+                    }
+                }
+            }
+        },
+        "/api/v1/carts/{id}": {
+            "get": {
+                "tags": [
+                    "Carts"
+                ],
+                "summary": "Get cart detail",
+                "operationId": "getCartDetail",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Cart detail"
+                    },
+                    "404": {
+                        "description": "Cart not found"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Carts"
+                ],
+                "summary": "Delete cart item",
+                "operationId": "deleteCart",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Cart deleted successfully"
+                    },
+                    "404": {
+                        "description": "Cart not found"
+                    }
+                }
+            }
+        },
+        "/api/v1/promo": {
+            "get": {
+                "tags": [
+                    "Promo"
+                ],
+                "summary": "Get list promos",
+                "operationId": "getPromos",
+                "responses": {
+                    "200": {
+                        "description": "Promos retrieved successfully"
+                    }
+                }
+            }
+        },
+        "/api/v1/promo/{id}": {
+            "get": {
+                "tags": [
+                    "Promo"
+                ],
+                "summary": "Get promo detail",
+                "operationId": "getPromoDetail",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Promo detail"
+                    },
+                    "404": {
+                        "description": "Promo not found"
+                    }
+                }
+            }
+        },
+        "/api/v1/promo/apply": {
+            "post": {
+                "tags": [
+                    "Promo"
+                ],
+                "summary": "Apply promo code",
+                "description": "Applies a promo code to a cart total",
+                "operationId": "applyPromo",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "code",
+                                    "total_price"
+                                ],
+                                "properties": {
+                                    "code": {
+                                        "type": "string",
+                                        "example": "PROMO10"
+                                    },
+                                    "total_price": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 100000
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Promo applied successfully"
+                    },
+                    "400": {
+                        "description": "Promo cannot be applied"
+                    },
+                    "404": {
+                        "description": "Promo not found"
+                    }
+                }
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Products",
+            "description": "Products"
+        },
+        {
+            "name": "Carts",
+            "description": "Carts"
+        },
+        {
+            "name": "Promo",
+            "description": "Promo"
+        }
+    ]
+}
