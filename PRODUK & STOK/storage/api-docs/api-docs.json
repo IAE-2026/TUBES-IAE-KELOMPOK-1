@@ -1,0 +1,47 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Product Service API",
+        "description": "Swagger API Documentation",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/api/v1/products": {
+            "get": {
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Get list products",
+                "description": "Returns list of products",
+                "operationId": "getProducts",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "ApiKeyAuth": {
+                "type": "apiKey",
+                "description": "API Key authentication (NIM)",
+                "name": "X-IAE-KEY",
+                "in": "header"
+            },
+            "BearerAuth": {
+                "type": "http",
+                "description": "SSO JWT Bearer token authentication",
+                "bearerFormat": "JWT",
+                "scheme": "bearer"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Products",
+            "description": "Products"
+        }
+    ]
+}
