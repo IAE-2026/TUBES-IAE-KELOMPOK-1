@@ -1,0 +1,109 @@
+{
+  "info": {
+    "name": "Customer Review Service",
+    "description": "API Collection for Customer Review Service",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Get All Reviews",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "X-IAE-KEY",
+            "value": "{{api_key}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/v1/reviews",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "reviews"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Get Reviews by Product",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "X-IAE-KEY",
+            "value": "{{api_key}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/v1/reviews/product/PROD-001",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "reviews",
+            "product",
+            "PROD-001"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Create Review",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "X-IAE-KEY",
+            "value": "{{api_key}}",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"product_id\": \"PROD-001\",\n  \"reviewer_name\": \"Azzahra\",\n  \"rating\": 5,\n  \"comment\": \"Produk sangat bagus dan sesuai ekspektasi!\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/api/v1/reviews",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "reviews"
+          ]
+        }
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://127.0.0.1:8000",
+      "type": "string"
+    },
+    {
+      "key": "api_key",
+      "value": "isi_dengan_api_key_dari_env",
+      "type": "string"
+    }
+  ]
+}
