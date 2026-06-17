@@ -1,0 +1,82 @@
+"A datetime string with format `Y-m-d H:i:s`, e.g. `2018-05-23 13:43:32`."
+scalar DateTime @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\DateTime")
+
+type Query {
+    hello: String! @field(resolver: "App\\GraphQL\\Queries\\Hello")
+    products: ProductsResponse! @field(resolver: "App\\GraphQL\\Queries\\Products")
+    cart(id: ID!): CartResponse! @field(resolver: "App\\GraphQL\\Queries\\CartDetail")
+    promos: PromosResponse! @field(resolver: "App\\GraphQL\\Queries\\Promos")
+    promo(id: ID!): PromoResponse! @field(resolver: "App\\GraphQL\\Queries\\PromoDetail")
+}
+
+type Mutation {
+    createCart(user_id: ID!, product_id: ID!, quantity: Int!, price: Float!): CartResponse! @field(resolver: "App\\GraphQL\\Mutations\\CreateCart")
+    deleteCart(id: ID!): DeleteResponse! @field(resolver: "App\\GraphQL\\Mutations\\DeleteCart")
+    applyPromo(code: String!, total_price: Float!): ApplyPromoResponse! @field(resolver: "App\\GraphQL\\Mutations\\ApplyPromo")
+}
+
+type ProductsResponse {
+    status: String!
+    message: String!
+    data: [Product!]!
+}
+
+type Product {
+    id: ID!
+    name: String!
+    price: Float!
+}
+
+type CartResponse {
+    status: String!
+    message: String!
+    data: Cart
+}
+
+type DeleteResponse {
+    status: String!
+    message: String!
+}
+
+type Cart {
+    id: ID!
+    user_id: ID!
+    product_id: ID!
+    quantity: Int!
+    price: Float!
+    created_at: DateTime
+    updated_at: DateTime
+}
+
+type PromosResponse {
+    status: String!
+    message: String!
+    data: [Promo!]!
+}
+
+type PromoResponse {
+    status: String!
+    message: String!
+    data: Promo
+}
+
+type Promo {
+    id: ID!
+    code: String!
+    discount_percent: Int!
+    minimum_transaction: Float!
+    max_usage: Int!
+    used: Int!
+    expired_at: DateTime
+    created_at: DateTime
+    updated_at: DateTime
+}
+
+type ApplyPromoResponse {
+    status: String!
+    message: String
+    promo_code: String
+    discount: Float
+    final_total: Float
+    receipt_number: String
+}
