@@ -1000,3 +1000,15 @@ Did you mean one of these?
 [2026-06-19 16:31:42] local.INFO: SSO Token: OK  
 [2026-06-19 16:31:43] local.INFO: SOAP Audit berhasil {"receipt_number":"IAE-LOG-2026-FDAF8297"} 
 [2026-06-19 16:31:43] local.INFO: RabbitMQ event published {"event":"review.submitted","product_id":"1"} 
+[2026-06-19 17:33:00] local.INFO: SSO JWT Payload captured {"sub":"warga22@ktp.iae.id","email":"warga22@ktp.iae.id","role":"not provided","iat":1781890379,"exp":1781893979} 
+[2026-06-19 17:33:00] local.INFO: SSO Token: OK  
+[2026-06-19 17:33:01] local.INFO: SOAP Audit berhasil {"receipt_number":"IAE-LOG-2026-17C7263A"} 
+[2026-06-19 17:33:04] local.INFO: RabbitMQ event published {"event":"review.submitted","product_id":"PROD-001"} 
+[2026-06-19 17:46:13] local.INFO: SSO JWT Payload captured {"sub":"warga22@ktp.iae.id","email":"warga22@ktp.iae.id","role":"not provided","iat":1781891171,"exp":1781894771} 
+[2026-06-19 17:46:14] local.INFO: SSO Token: OK  
+[2026-06-19 17:46:14] local.INFO: SOAP Audit berhasil {"receipt_number":"IAE-LOG-2026-ED4E699D"} 
+[2026-06-19 17:46:15] local.INFO: RabbitMQ event published {"event":"review.submitted","product_id":"PROD-001"} 
+[2026-06-19 17:58:22] local.INFO: SSO JWT Payload captured {"sub":"warga22@ktp.iae.id","email":"warga22@ktp.iae.id","role":"not provided","iat":1781891901,"exp":1781895501} 
+[2026-06-19 17:58:22] local.INFO: SSO Token: OK  
+[2026-06-19 17:58:32] local.INFO: SOAP Audit berhasil {"receipt_number":"IAE-LOG-2026-9F8D3BDD"} 
+[2026-06-19 17:58:38] local.INFO: RabbitMQ event published {"event":"review.submitted","product_id":"PROD-001"} 
