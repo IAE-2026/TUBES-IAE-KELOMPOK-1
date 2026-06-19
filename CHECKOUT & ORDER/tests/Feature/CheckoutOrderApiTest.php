@@ -29,7 +29,7 @@ class CheckoutOrderApiTest extends TestCase
 
     public function test_api_key_is_required(): void
     {
-        $this->getJson('/api/v1/checkouts')
+        $this->getJson('/api/checkout')
             ->assertStatus(401)
             ->assertJson([
                 'status' => 'error',
@@ -49,12 +49,12 @@ class CheckoutOrderApiTest extends TestCase
         $this->assertSame(1, $checkout['data']['user_id']);
         $this->assertCount(1, $checkout['data']['items']);
 
-        $this->getJson('/api/v1/checkouts', $this->headers())
+        $this->getJson('/api/checkout', $this->headers())
             ->assertOk()
             ->assertJsonPath('status', 'success')
             ->assertJsonCount(1, 'data');
 
-        $this->getJson('/api/v1/checkouts/'.$checkout['data']['id'], $this->headers())
+        $this->getJson('/api/checkout/'.$checkout['data']['id'], $this->headers())
             ->assertOk()
             ->assertJsonPath('data.id', $checkout['data']['id'])
             ->assertJsonPath('data.items.0.product_id', 10);
@@ -64,11 +64,11 @@ class CheckoutOrderApiTest extends TestCase
     {
         $checkout = $this->createCheckout()['data'];
 
-        $this->getJson('/api/v1/payment/methods', $this->headers())
+        $this->getJson('/api/payment/methods', $this->headers())
             ->assertOk()
             ->assertJsonPath('data.0.code', 'bank_transfer');
 
-        $payment = $this->postJson('/api/v1/payments', [
+        $payment = $this->postJson('/api/payment', [
             'checkout_id' => $checkout['id'],
             'payment_method' => 'bank_transfer',
         ], $this->headers())
@@ -76,15 +76,15 @@ class CheckoutOrderApiTest extends TestCase
             ->assertJsonPath('data.status', 'pending')
             ->json('data');
 
-        $this->getJson('/api/v1/payments/'.$payment['id'], $this->headers())
+        $this->getJson('/api/payment/'.$payment['id'], $this->headers())
             ->assertOk()
             ->assertJsonPath('data.id', $payment['id']);
 
-        $this->getJson('/api/v1/payments/'.$payment['id'].'/status', $this->headers())
+        $this->getJson('/api/payment/'.$payment['id'].'/status', $this->headers())
             ->assertOk()
             ->assertJsonPath('data.status', 'pending');
 
-        $this->postJson('/api/v1/payments/confirm', [
+        $this->postJson('/api/payment/confirm', [
             'payment_id' => $payment['id'],
         ], $this->headers())
             ->assertOk()
@@ -95,7 +95,7 @@ class CheckoutOrderApiTest extends TestCase
     {
         [$checkout, $payment] = $this->createConfirmedPayment();
 
-        $order = $this->postJson('/api/v1/orders', [
+        $order = $this->postJson('/api/orders', [
             'checkout_id' => $checkout['id'],
             'payment_id' => $payment['id'],
         ], $this->headers())
@@ -104,12 +104,12 @@ class CheckoutOrderApiTest extends TestCase
             ->assertJsonPath('data.items.0.product_id', 10)
             ->json('data');
 
-        $this->getJson('/api/v1/orders/'.$order['id'], $this->headers())
+        $this->getJson('/api/orders/'.$order['id'], $this->headers())
             ->assertOk()
             ->assertJsonPath('data.id', $order['id'])
             ->assertJsonPath('data.payment.id', $payment['id']);
 
-        $this->putJson('/api/v1/orders/'.$order['id'].'/status', [
+        $this->putJson('/api/orders/'.$order['id'].'/status', [
             'status' => 'processing',
         ], $this->headers())
             ->assertOk()
@@ -127,7 +127,7 @@ class CheckoutOrderApiTest extends TestCase
             'services.sso.role_claim' => 'role',
         ]);
 
-        $this->postJson('/api/v1/orders', [
+        $this->postJson('/api/orders', [
             'checkout_id' => $checkout['id'],
             'payment_id' => $payment['id'],
         ], $this->headers([
@@ -164,7 +164,7 @@ class CheckoutOrderApiTest extends TestCase
             'services.sso.role_claim' => 'role',
         ]);
 
-        $this->postJson('/api/v1/orders', [
+        $this->postJson('/api/orders', [
             'checkout_id' => $checkout['id'],
             'payment_id' => $payment['id'],
         ], $this->headers([
@@ -202,7 +202,7 @@ class CheckoutOrderApiTest extends TestCase
             ),
         ]);
 
-        $order = $this->postJson('/api/v1/orders', [
+        $order = $this->postJson('/api/orders', [
             'checkout_id' => $checkout['id'],
             'payment_id' => $payment['id'],
         ], $this->headers())
@@ -243,7 +243,7 @@ class CheckoutOrderApiTest extends TestCase
             ),
         ]);
 
-        $this->postJson('/api/v1/orders', [
+        $this->postJson('/api/orders', [
             'checkout_id' => $checkout['id'],
             'payment_id' => $payment['id'],
         ], $this->headers([
@@ -282,7 +282,7 @@ class CheckoutOrderApiTest extends TestCase
             ),
         ]);
 
-        $this->postJson('/api/v1/orders', [
+        $this->postJson('/api/orders', [
             'checkout_id' => $checkout['id'],
             'payment_id' => $payment['id'],
         ], $this->headers([
@@ -316,7 +316,7 @@ class CheckoutOrderApiTest extends TestCase
             ], 200),
         ]);
 
-        $this->postJson('/api/v1/orders', [
+        $this->postJson('/api/orders', [
             'checkout_id' => $checkout['id'],
             'payment_id' => $payment['id'],
         ], $this->headers())
@@ -333,14 +333,14 @@ class CheckoutOrderApiTest extends TestCase
 
     public function test_validation_errors_and_missing_resources_use_contract_wrapper(): void
     {
-        $this->postJson('/api/v1/checkouts', [
+        $this->postJson('/api/checkout', [
             'user_id' => 1,
         ], $this->headers())
             ->assertStatus(422)
             ->assertJsonPath('status', 'error')
             ->assertJsonStructure(['status', 'message', 'errors']);
 
-        $this->getJson('/api/v1/orders/999', $this->headers())
+        $this->getJson('/api/orders/999', $this->headers())
             ->assertNotFound()
             ->assertJson([
                 'status' => 'error',
@@ -353,7 +353,7 @@ class CheckoutOrderApiTest extends TestCase
     {
         [$checkout, $payment] = $this->createConfirmedPayment();
 
-        $order = $this->postJson('/api/v1/orders', [
+        $order = $this->postJson('/api/orders', [
             'checkout_id' => $checkout['id'],
             'payment_id' => $payment['id'],
         ], $this->headers())->json('data');
@@ -391,7 +391,7 @@ GRAPHQL,
      */
     private function createCheckout(): array
     {
-        return $this->postJson('/api/v1/checkouts', [
+        return $this->postJson('/api/checkout', [
             'user_id' => 1,
             'shipping_address' => 'Jl. Telekomunikasi No. 1, Bandung',
             'payment_method' => 'bank_transfer',
@@ -414,12 +414,12 @@ GRAPHQL,
     {
         $checkout = $this->createCheckout()['data'];
 
-        $payment = $this->postJson('/api/v1/payments', [
+        $payment = $this->postJson('/api/payment', [
             'checkout_id' => $checkout['id'],
             'payment_method' => 'bank_transfer',
         ], $this->headers())->json('data');
 
-        $payment = $this->postJson('/api/v1/payments/confirm', [
+        $payment = $this->postJson('/api/payment/confirm', [
             'payment_id' => $payment['id'],
         ], $this->headers())->json('data');
 
