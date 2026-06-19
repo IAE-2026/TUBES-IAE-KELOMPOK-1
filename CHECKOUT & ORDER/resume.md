@@ -1,6 +1,8 @@
-# Riwayat Kontribusi Mochamad Lutfie Alfiansyah
+# Resume
 
-Repository: TUBES-IAE-KELOMPOK-1
+## Nama : Mochamad Lutfie Alfiansyah
+## NIM : 102022400364
+## Mata Kuliah : Integrasi Aplikasi Enterprise
 
 ## Daftar Commit
 
