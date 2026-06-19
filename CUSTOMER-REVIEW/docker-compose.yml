@@ -1,0 +1,17 @@
+services:
+  app:
+    build: .
+    ports:
+      - "8000:80"
+    environment:
+      APP_KEY: base64:wdHbcRloV42SuQyYbiRHfmOPkoV4tMuHeoFUZanSE2o=
+      APP_ENV: local
+      APP_DEBUG: true
+      DB_CONNECTION: sqlite
+      API_KEY: KEY-MHS-124
+      IAE_API_KEY: KEY-MHS-124
+      SSO_EMAIL: warga22@ktp.iae.id
+      SSO_PASSWORD: KtpDigital2026!
+      IAE_TEAM_ID: TEAM-01
+    volumes:
+      - .:/var/www/html

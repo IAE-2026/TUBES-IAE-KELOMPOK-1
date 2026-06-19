@@ -1,0 +1,14 @@
+type Review {
+    id: ID!
+    product_id: String!
+    reviewer_name: String!
+    rating: Int!
+    comment: String!
+    created_at: String
+    updated_at: String
+}
+
+type Query {
+    reviews: [Review!]! @all
+    reviewsByProduct(product_id: String! @eq): [Review!]! @all
+}

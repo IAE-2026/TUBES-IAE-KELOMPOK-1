@@ -1,0 +1,121 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Customer Review Service API",
+        "description": "API untuk mengelola review produk",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/api/v1/reviews": {
+            "get": {
+                "summary": "Ambil semua review",
+                "operationId": "089acaacc3d898976a1a2793a732b604",
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "summary": "Simpan review baru",
+                "operationId": "050ff9620bfceb90b7a67100678b39a0",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "product_id",
+                                    "reviewer_name",
+                                    "rating",
+                                    "comment"
+                                ],
+                                "properties": {
+                                    "product_id": {
+                                        "type": "string",
+                                        "example": "PROD-001"
+                                    },
+                                    "reviewer_name": {
+                                        "type": "string",
+                                        "example": "Azzahra"
+                                    },
+                                    "rating": {
+                                        "type": "integer",
+                                        "example": 5
+                                    },
+                                    "comment": {
+                                        "type": "string",
+                                        "example": "Produk bagus!"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Created"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/reviews/product/{product_id}": {
+            "get": {
+                "summary": "Ambil review berdasarkan produk",
+                "operationId": "a9075a2d3bd439619f30ad06e3d25de4",
+                "parameters": [
+                    {
+                        "name": "product_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "ApiKeyAuth": {
+                "type": "apiKey",
+                "name": "X-API-KEY",
+                "in": "header"
+            }
+        }
+    }
+}
