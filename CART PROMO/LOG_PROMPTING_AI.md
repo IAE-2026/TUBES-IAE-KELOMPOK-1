@@ -56,7 +56,7 @@ Dokumen ini berisi rekap prompting dengan AI Assistant disini saya pake Antigrav
 ---
 
 ### 6. Masalah Validasi Tipe Data `cart_id` (Error 422)
-* **Prompt dari user**:
+* **Prompt dari saya**:
   > *"The cart id field must be a string. Padahal saya input cart_id: 2"*
 * **kendala**: Validator di `CheckoutController.php` menetapkan aturan `'cart_id' => 'required|string'`, sehingga input angka biasa (`2`) dianggap tidak sah.
 * **Solusi dari AI**:
@@ -65,7 +65,7 @@ Dokumen ini berisi rekap prompting dengan AI Assistant disini saya pake Antigrav
 ---
 
 ### 7. Masalah Promo "Minimum transaksi belum memenuhi" (Error 400)
-* **Prompt dari user**:
+* **Prompt dari saya**:
   > *"Minimum transaksi belum memenuhi saat apply promo..."*
 * **kendala**: Endpoint `/api/v1/promos/apply` membutuhkan nominal belanja (`total_price`) untuk dihitung terhadap limit minimum transaksi promo, namun user hanya mengirimkan parameter `"code": "PROMO10"`.
 * **Solusi dari AI**:
