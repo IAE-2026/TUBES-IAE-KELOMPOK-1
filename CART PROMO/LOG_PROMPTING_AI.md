@@ -1,283 +1,72 @@
-# Rekap Log Prompting dengan AI
+# 🤖 Rekap Log Prompting AI - Tugas Besar IAE 2026
 
-## Tanggal: 16 Mei 2026
-
-### 02:13 WIB
-Melakukan pengecekan endpoint API menggunakan Laravel dan Postman.  
-Ditemukan error:
-- `Class "App\\Http\\Controllers\\Controller" not found`
-
-Tindakan:
-- Memperbaiki namespace dan struktur file `Controller.php`.
+Dokumen ini berisi rekap interaksi dan prompting dengan AI Assistant (Antigravity) dalam proses integrasi microservices, konfigurasi gateway, dan penyelesaian bug end-to-end.
 
 ---
 
-### 02:20 WIB
-Endpoint `/api/v1/promo/apply` berhasil dijalankan melalui Postman.  
-Response:
-```json
-{
-  "status": "success",
-  "message": "PROMO WORK"
-}
-```
+## 📋 Daftar Prompting Utama & Solusi
+
+### 1. Masalah Integrasi NIM ke SSO M2M (Otentikasi Antar-Servis)
+* **Prompt dari Warga (User)**:
+  > *"tolong disesuaikan agar bisa hit dan mendapatkan token baik yang sebelumnya sudah berhasil or belum, sesuai nim kelompok gw di foto..."*
+* **Masalah**: SSO Dosen merilis aturan baru di mana setiap request token M2M antar-servis wajib menyertakan parameter `nim` mahasiswa selain `api_key`.
+* **Solusi dari AI**:
+  * Menambahkan environment variable `IAE_NIM` untuk setiap microservice di `docker-compose.yml` sesuai NIM anggota kelompok yang bersangkutan.
+  * Mengubah script penarikan token SSO di **Service A** (`CentralSSOService.php`), **Service B** (`IaeCentralTokenClient.php`), dan **Service D** (`SsoService.php`) agar secara otomatis menyertakan parameter `'nim' => env('IAE_NIM')` ke body request SSO Dosen.
 
 ---
 
-### 02:23 WIB
-Melakukan pengembangan fitur perhitungan promo otomatis berdasarkan:
-- kode promo
-- total transaksi
-
-Tindakan:
-- Menambahkan logika diskon pada `PromoController.php`.
-
----
-
-### 02:29 WIB
-Pengujian ulang endpoint promo berhasil.  
-Response:
-```json
-{
-  "status": "success",
-  "promo_code": "DISKON10",
-  "discount": 10000,
-  "final_total": 90000
-}
-```
+### 2. Masalah Penyesuaian Rute & Kontrak Dosen (Route Refactoring)
+* **Prompt dari Warga (User)**:
+  > *"oke gw setuju, sama dittambahin yg disuruh dosen sesuai dengan nim kelompok gw... coba lu review yg gw maksud baru dikerjain..."*
+* **Masalah**: Dosen meminta rute Service B (`Checkout & Order`) tidak menggunakan prefix `/v1` dan rute plural promo diubah menjadi `/api/v1/promos` (plural).
+* **Solusi dari AI**:
+  * Mengubah seluruh file rute `routes/api.php` di Service B untuk menghapus prefix `/v1/` dan mengubah rute dari `/checkouts` menjadi `/checkout` (singular).
+  * Mengubah rute promo di Service C dari `/promo` menjadi `/promos` (plural).
+  * Memperbarui file konfigurasi Nginx API Gateway (`gateway/default.conf`) agar meneruskan path `/api/checkout`, `/api/payment`, dan `/api/orders` langsung ke Service B tanpa prefix `/v1/`.
+  * Memindahkan letak pencocokan lokasi regex Service C di Nginx Gateway ke urutan teratas agar request login `/api/v1/auth/login` tidak bertabrakan dengan Service A.
 
 ---
 
-### 02:32 WIB
-Membuat migration dan model untuk tabel promo menggunakan Laravel Artisan.
-
-Command:
-```bash
-php artisan make:migration create_promos_table
-php artisan make:model Promo
-```
+### 3. Masalah Koneksi DNS Container (WSL2 Network Issue)
+* **Prompt dari Warga (User)**:
+  > *"kenapa service checkout ga bisa nge-hit iae-sso.virtualfri.id?"*
+* **Masalah**: Container di lingkungan Docker WSL2 Windows seringkali gagal melakukan resolusi DNS eksternal ke domain SSO Dosen.
+* **Solusi dari AI**:
+  * Menambahkan konfigurasi network `dns` (`8.8.8.8` & `1.1.1.1`) pada seluruh service aplikasi di file `docker-compose.yml` untuk memaksa container menggunakan DNS resolver publik Google dan Cloudflare.
 
 ---
 
-### 02:45 WIB
-Melakukan validasi endpoint berdasarkan ketentuan tugas Service C:
-- GET `/api/v1/products`
-- POST `/api/v1/carts`
-- DELETE `/api/v1/carts/{id}`
-- GET `/api/v1/carts/{id}`
-- POST `/api/v1/promo/apply`
-- GET `/api/v1/promo`
-- GET `/api/v1/promo/{id}`
-
-Hasil:
-- Endpoint berhasil dibuat dan diuji menggunakan Postman.
+### 4. Masalah Error 401 Unauthorized pada Inter-Service Call
+* **Prompt dari Warga (User)**:
+  > *"kenapa waktu checkout dipanggil, responnya 401 Unauthorized dari service keranjang?"*
+* **Masalah**: Saat Service B mencoba mengambil rincian keranjang belanja ke Service C, request tersebut ditolak karena Service B tidak meneruskan token JWT milik pelanggan.
+* **Solusi dari AI**:
+  * Memodifikasi `CartPromoClient.php` di Service B agar menangkap Bearer token dari request pelanggan asli, lalu meneruskannya di header request (`Authorization: Bearer <TOKEN>`) saat menghubungi Service C.
 
 ---
 
-### 02:50 WIB
-Memulai konfigurasi Swagger Documentation menggunakan package `L5 Swagger`.
-
-Command:
-```bash
-php artisan l5-swagger:generate
-```
-
-Kendala:
-- Error `Required @OA\Info() not found`
+### 5. Masalah Postman Redirect (Laravel Welcome Page HTML)
+* **Prompt dari Warga (User)**:
+  > *"gabisaa, kok malah dapet halaman HTML Laravel Not Found / Welcome Page?"*
+* **Masalah**: User melakukan POST data ke `/api/v1/products` di Postman namun datanya ditolak validasi (misal karena SKU duplikat). Tanpa header `Accept: application/json`, Laravel menganggap request berasal dari web browser biasa dan melakukan redirect (302) ke `/` (halaman utama).
+* **Solusi dari AI**:
+  * Menginstruksikan user untuk menambahkan header **`Accept: application/json`** pada setiap request API di Postman agar Laravel selalu mengembalikan respon validasi dalam bentuk format JSON, bukan redirect HTML.
 
 ---
 
-### 03:00 WIB
-Melakukan debugging konfigurasi Swagger:
-- Menambahkan annotation `@OA\Info`
-- Membuat file dokumentasi OpenAPI
-- Membersihkan cache Laravel
-
-Command:
-```bash
-php artisan optimize:clear
-composer dump-autoload
-```
+### 6. Masalah Validasi Tipe Data `cart_id` (Error 422)
+* **Prompt dari Warga (User)**:
+  > *"The cart id field must be a string. Padahal saya input cart_id: 2"*
+* **Masalah**: Validator di `CheckoutController.php` menetapkan aturan `'cart_id' => 'required|string'`, sehingga input angka biasa (`2`) dianggap tidak sah.
+* **Solusi dari AI**:
+  * Mengubah aturan validasi di `CheckoutController.php` menjadi `'cart_id' => ['nullable']` agar bisa menerima angka langsung (integer) maupun teks string (seperti `"2"`) guna menghindari kegagalan tipe data.
 
 ---
 
-### 03:27 WIB
-Swagger UI berhasil terbuka pada:
-```text
-http://127.0.0.1:8000/api/documentation
-```
-
-Namun ditemukan kendala:
-- `Failed to load API definition`
-
----
-
-### 03:40 WIB
-Melakukan perbaikan dependency Swagger dan penyesuaian annotation agar kompatibel dengan versi package yang digunakan.
-
----
-
-### 04:00 WIB
-Melakukan final checking pada:
-- Endpoint API
-- Response JSON
-- Routing Laravel
-- Dokumentasi Swagger
-
-Status:
-- Sebagian besar fitur utama telah berjalan dengan baik.
-- Swagger masih dalam tahap penyesuaian konfigurasi.
-
----
-
-## Tanggal: 8 Juni 2026
-
-### 15:00 WIB
-Mulai ngerjain integrasi service ke Cloud Dosen (SSO, SOAP, RabbitMQ).  
-Baca PDF tugas besar dan cari tau endpoint apa aja yang disediain dosen.
-
-Referensi:
-- SSO: `https://iae-sso.virtualfri.id/api/v1/auth/token`
-- SOAP: `https://iae-sso.virtualfri.id/soap/v1/audit`
-- RabbitMQ: `https://iae-sso.virtualfri.id/api/v1/messages/publish`
-
----
-
-### 15:30 WIB
-Setup config buat integrasi. Tambahin variabel di `.env` dan bikin `config/iae.php`.
-
-Prompt ke AI:
-> "gimana cara bikin config file Laravel buat nyimpen URL SSO, SOAP, sama RabbitMQ?"
-
-Hasil:
-- Bikin `config/iae.php` yang baca dari `.env`
-
----
-
-### 16:00 WIB
-Mulai bikin SSO login. Butuh library buat verify JWT (RS256).
-
-Command:
-```bash
-composer require firebase/php-jwt
-```
-
-Prompt ke AI:
-> "cara verify JWT pakai JWKS di Laravel gimana?"
-
-Hasil:
-- Bikin `SsoService.php` — method `login()`, `getJwks()`, `verifyToken()`
-- JWKS di-cache 1 jam biar ga fetch tiap request
-
----
-
-### 16:30 WIB
-Bikin middleware buat proteksi endpoint pakai JWT.
-
-Prompt ke AI:
-> "bikin middleware Laravel yang cek Bearer token dan verify pakai JWKS"
-
-Hasil:
-- Bikin `JwtAuthMiddleware.php`
-- Kalau token invalid/expired, return 401 JSON
-- Kalau valid, attach decoded user ke request
-
-Kendala:
-- Bingung cara register middleware di Laravel 12 (beda sama versi lama)
-- Ternyata di `bootstrap/app.php` pakai `->withMiddleware()`
-
----
-
-### 17:00 WIB
-Bikin AuthController dan tabel local_roles.
-
-Prompt ke AI:
-> "bikin controller login yang forward ke SSO, terus bikin tabel roles buat mapping user SSO ke role lokal"
-
-Hasil:
-- `AuthController.php` — endpoint `POST /auth/login` dan `GET /auth/me`
-- Migration `local_roles` — mapping email SSO ke role (admin/customer)
-- Seeder buat set `warga28@ktp.iae.id` sebagai admin
-
----
-
-### 17:30 WIB
-Lanjut bikin SOAP Audit Service.
-
-Prompt ke AI:
-> "cara bikin SOAP XML envelope manual tanpa PHP SOAP extension gimana? terus kirim pakai HTTP client Laravel"
-
-Hasil:
-- Bikin `SoapAuditService.php`
-- XML envelope dibikin manual pakai string concatenation
-- Tag wajib: `<TeamID>`, `<ActivityName>`, `<LogContent>` (CDATA JSON)
-- Parse response pakai regex buat ambil ReceiptNumber
-- ReceiptNumber disimpen ke tabel `audit_receipts`
-
----
-
-### 18:00 WIB
-Bikin RabbitMQ Publisher.
-
-Prompt ke AI:
-> "cara publish event ke RabbitMQ dosen lewat HTTP API, bukan AMQP protocol"
-
-Hasil:
-- Bikin `RabbitMqPublisher.php`
-- Kirim JSON event ke `/api/v1/messages/publish` pakai Bearer token
-- Pola fire-and-forget (ga ganggu flow utama kalau gagal)
-
----
-
-### 18:30 WIB
-Modifikasi controller-controller yang sudah ada.
-
-Perubahan:
-- `PromoController.php` — tambahin SOAP audit + RabbitMQ di `apply()`
-- `CartController.php` — tambahin RabbitMQ di `store()` dan `destroy()`
-- `ApplyPromo.php` (GraphQL) — tambahin SOAP audit + RabbitMQ
-
----
-
-## Tanggal: 11 Juni 2026
-
-### 05:30 WIB
-Setup API Gateway pakai Nginx.
-
-Prompt ke AI:
-> "bikin Nginx reverse proxy buat bungkus Laravel, port 8000 ga boleh diakses langsung"
-
-Hasil:
-- Bikin `nginx/default.conf` — reverse proxy ke app:8000
-- Update `docker-compose.yml` — tambahin service Nginx, ganti `ports` ke `expose` di app
-
----
-
-### 06:00 WIB
-Build dan deploy Docker.
-
-Command:
-```bash
-docker compose up -d --build
-docker compose exec app php artisan migrate --force
-docker compose exec app php artisan db:seed --class=LocalRoleSeeder
-```
-
-Kendala:
-- `firebase/php-jwt` belum ke-install di dalam container Docker
-- Fix: `docker compose exec app composer require firebase/php-jwt`
-
----
-
-### 06:30 WIB
-Testing semua endpoint.
-
-Hasil testing:
-- ✅ SSO Login — dapat JWT token, profile: Bayu Setiawan
-- ✅ JWT Auth `/me` — decoded user + role admin
-- ✅ Protected route tanpa token — 401 Unauthorized
-- ✅ Apply Promo — SOAP audit terkirim, ReceiptNumber: `IAE-LOG-2026-DBB6301B`
-- ✅ Create Cart — event `cart.created` terpublish ke RabbitMQ
-- ✅ Gateway blocking — port 8000 ga bisa diakses langsung
-
-Semua integrasi berjalan.
+### 7. Masalah Promo "Minimum transaksi belum memenuhi" (Error 400)
+* **Prompt dari Warga (User)**:
+  > *"Minimum transaksi belum memenuhi saat apply promo..."*
+* **Masalah**: Endpoint `/api/v1/promos/apply` membutuhkan nominal belanja (`total_price`) untuk dihitung terhadap limit minimum transaksi promo, namun user hanya mengirimkan parameter `"code": "PROMO10"`.
+* **Solusi dari AI**:
+  * Menjelaskan parameter wajib yang harus dikirim di request body JSON yaitu `total_price` (dengan nilai minimal Rp 50.000 untuk kode `PROMO10`).
