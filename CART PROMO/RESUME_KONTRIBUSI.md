@@ -1,6 +1,6 @@
 # 📝 Resume Kontribusi Git Individu - Tugas Besar IAE 2026
 
-* **Nama**: Naufan Torick
+* **Nama**: Naufan Rae Rasyad Torick
 * **NIM**: 102022400283
 * **Kelompok**: Kelompok 1 (E-Commerce)
 * **Total Commit**: 7 Commit
