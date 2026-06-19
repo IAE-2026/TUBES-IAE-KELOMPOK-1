@@ -10,7 +10,7 @@
 ### Sesi 1: Perancangan Struktur Awal & Database Laravel
 
 **User:**
-Halo! Saya mendapat tugas membuat Service A (Produk & Stok) menggunakan Laravel 11. Layanan ini harus mendukung REST API dengan routing versioning `/api/v1/products` dan database MySQL. Di dalam database, saya butuh tabel `products` dengan field: `id` (string uuid/custom), `name`, `sku`, `price`, `stock`, dan `description`. Tolong buatkan contoh file migration dan model Laravel untuk kebutuhan tersebut.
+Saya mendapat tugas membuat Service A (Produk & Stok) menggunakan Laravel 11. Layanan ini harus mendukung REST API dengan routing versioning `/api/v1/products` dan database MySQL. Di dalam database, saya butuh tabel `products` dengan field: `id` (string uuid/custom), `name`, `sku`, `price`, `stock`, dan `description`. Tolong buatkan contoh file migration dan model Laravel untuk kebutuhan tersebut.
 
 **AI:**
 AI membantu memberikan contoh migration dan model Laravel yang sesuai dengan kebutuhan tabel produk. Dari contoh tersebut saya memahami cara membuat struktur database, menentukan field yang dibutuhkan, serta menghubungkan model dengan tabel yang ada pada database.
