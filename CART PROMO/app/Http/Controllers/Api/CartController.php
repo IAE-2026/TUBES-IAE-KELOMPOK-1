@@ -28,6 +28,20 @@ class CartController extends Controller
         ]);
     }
 
+    /**
+     * GET /api/v1/carts - Tampilkan semua isi keranjang
+     */
+    public function index()
+    {
+        $carts = Cart::all();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Carts retrieved successfully',
+            'data' => $carts
+        ]);
+    }
+
     #[OA\Post(
         path: '/api/v1/carts',
         operationId: 'createCart',
@@ -51,12 +65,54 @@ class CartController extends Controller
     )]
     public function store(Request $request)
     {
-        $cart = Cart::create($request->only([
-            'user_id',
-            'product_id',
-            'quantity',
-            'price',
-        ]));
+        $request->validate([
+            'product_id' => 'required|integer',
+            'quantity' => 'required|integer|min:1',
+        ]);
+
+        // Get user_id from token if not provided in the request body
+        $userId = $request->input('user_id');
+        if (!$userId) {
+            $ssoUser = $request->attributes->get('sso_user');
+            if ($ssoUser) {
+                $email = $ssoUser->sub ?? $ssoUser->email ?? '';
+                preg_match('/\d+/', $email, $matches);
+                $userId = !empty($matches) ? (int)$matches[0] : 1;
+            } else {
+                $userId = 1;
+            }
+        }
+
+        // Fetch price from Service A (Produk & Stok) if not provided in the request body
+        $price = $request->input('price');
+        if (!$price) {
+            try {
+                $productId = $request->input('product_id');
+                // Service A requires X-IAE-KEY header (using KEY-MHS-282)
+                $response = \Illuminate\Support\Facades\Http::withHeaders([
+                    'X-IAE-KEY' => 'KEY-MHS-282'
+                ])->timeout(5)
+                  ->get("http://produk-stok-app:8000/api/v1/products/{$productId}");
+
+                if ($response->successful()) {
+                    $price = $response->json('data.price');
+                }
+            } catch (\Exception $e) {
+                \Log::error('Failed to fetch product price from Service A: ' . $e->getMessage());
+            }
+
+            // Fallback price if API request fails
+            if (!$price) {
+                $price = 500000;
+            }
+        }
+
+        $cart = Cart::create([
+            'user_id' => $userId,
+            'product_id' => $request->input('product_id'),
+            'quantity' => $request->input('quantity'),
+            'price' => $price,
+        ]);
 
         // Publish cart.created event to RabbitMQ
         try {

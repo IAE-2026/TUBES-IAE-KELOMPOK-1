@@ -59,11 +59,15 @@ services:
       DB_USERNAME: root
       DB_PASSWORD: root123
       IAE_API_KEY: KEY-MHS-282
+      IAE_NIM: 102022400191
     depends_on:
       produk-stok-db:
         condition: service_healthy
     networks:
       - iae-network
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
 
   produk-stok-db:
     image: mysql:8.0
@@ -105,12 +109,19 @@ services:
       DB_DATABASE: checkout_order_service
       DB_USERNAME: checkout_user
       DB_PASSWORD: checkout_password
-      IAE_API_KEY: KEY-MHS-282
+      IAE_API_KEY: KEY-MHS-343
+      IAE_NIM: 102022400268
     depends_on:
       checkout-order-db:
         condition: service_healthy
+    volumes:
+      - ./CHECKOUT & ORDER:/var/www/html
+      - checkout-order-vendor:/var/www/html/vendor
     networks:
       - iae-network
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
 
   checkout-order-db:
     image: mysql:8.4
@@ -160,9 +171,10 @@ services:
       DB_DATABASE: cart_promo_service_db
       DB_USERNAME: root
       DB_PASSWORD: root
-      IAE_API_KEY: 102022400283
+      IAE_API_KEY: KEY-MHS-376
+      IAE_NIM: 102022400283
       SSO_BASE_URL: https://iae-sso.virtualfri.id
-      SSO_EMAIL: warga28@ktp.iae.id
+      SSO_EMAIL: warga13@ktp.iae.id
       SSO_PASSWORD: KtpDigital2026!
       SOAP_AUDIT_URL: https://iae-sso.virtualfri.id/soap/v1/audit
       RABBITMQ_PUBLISH_URL: https://iae-sso.virtualfri.id/api/v1/messages/publish
@@ -172,6 +184,9 @@ services:
         condition: service_healthy
     networks:
       - iae-network
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
 
   cart-promo-db:
     image: mysql:8.0
@@ -213,10 +228,14 @@ services:
       SSO_EMAIL: warga22@ktp.iae.id
       SSO_PASSWORD: KtpDigital2026!
       IAE_TEAM_ID: TEAM-01
+      IAE_NIM: 102022400054
     volumes:
       - ./CUSTOMER-REVIEW:/var/www/html
     networks:
       - iae-network
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
 
 # =============================================================================
 # VOLUMES - Data persisten database
@@ -225,6 +244,7 @@ volumes:
   produk-stok-vendor:
   produk-stok-db-data:
   checkout-order-db-data:
+  checkout-order-vendor:
   cart-promo-vendor:
   cart-promo-db-data:
 

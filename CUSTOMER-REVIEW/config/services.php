@@ -43,6 +43,7 @@ return [
     'iae' => [
         'base_url'     => env('IAE_BASE_URL', 'https://iae-sso.virtualfri.id'),
         'api_key'      => env('IAE_API_KEY', 'KEY-MHS-124'),
+        'nim'          => env('IAE_NIM', '102022400054'),
         'team_id'      => env('IAE_TEAM_ID', 'TEAM-01'),
         'sso_email'    => env('SSO_EMAIL', 'warga22@ktp.iae.id'),
         'sso_password' => env('SSO_PASSWORD', 'KtpDigital2026!'),

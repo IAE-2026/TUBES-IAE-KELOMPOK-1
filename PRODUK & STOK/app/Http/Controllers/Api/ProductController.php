@@ -151,9 +151,14 @@ class ProductController extends Controller
 }
 
     // UPDATE STOCK
-   public function updateStock(Request $request, $id)
+   public function updateStock(Request $request)
 {
-    $product = Product::find($id);
+    $request->validate([
+        'product_id' => 'required|integer',
+        'stock' => 'required|integer',
+    ]);
+
+    $product = Product::find($request->product_id);
 
     if (!$product) {
         return response()->json([

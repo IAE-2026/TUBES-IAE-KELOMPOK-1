@@ -77,6 +77,7 @@ class SsoService
     {
         $response = Http::post("{$this->baseUrl}/api/v1/auth/token", [
             'api_key' => config('services.iae.api_key'),
+            'nim'     => config('services.iae.nim'),
         ]);
 
         if ($response->successful()) {

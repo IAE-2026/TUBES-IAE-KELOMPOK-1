@@ -992,3 +992,11 @@ Did you mean one of these?
 [2026-06-17 15:28:35] local.INFO: SSO Token: OK  
 [2026-06-17 15:28:37] local.INFO: SOAP Audit berhasil {"receipt_number":"IAE-LOG-2026-D8A17976"} 
 [2026-06-17 15:28:38] local.INFO: RabbitMQ event published {"event":"review.submitted","product_id":"PROD-002"} 
+[2026-06-19 16:27:51] local.INFO: SSO JWT Payload captured {"sub":"warga22@ktp.iae.id","email":"warga22@ktp.iae.id","role":"not provided","iat":1781886470,"exp":1781890070} 
+[2026-06-19 16:27:51] local.INFO: SSO Token: OK  
+[2026-06-19 16:27:52] local.INFO: SOAP Audit berhasil {"receipt_number":"IAE-LOG-2026-85FC7137"} 
+[2026-06-19 16:27:52] local.INFO: RabbitMQ event published {"event":"review.submitted","product_id":"1"} 
+[2026-06-19 16:31:42] local.INFO: SSO JWT Payload captured {"sub":"warga22@ktp.iae.id","email":"warga22@ktp.iae.id","role":"not provided","iat":1781886702,"exp":1781890302} 
+[2026-06-19 16:31:42] local.INFO: SSO Token: OK  
+[2026-06-19 16:31:43] local.INFO: SOAP Audit berhasil {"receipt_number":"IAE-LOG-2026-FDAF8297"} 
+[2026-06-19 16:31:43] local.INFO: RabbitMQ event published {"event":"review.submitted","product_id":"1"} 

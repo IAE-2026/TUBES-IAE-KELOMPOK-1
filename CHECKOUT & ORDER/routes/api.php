@@ -9,17 +9,20 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('/graphql', GraphQLController::class)->middleware('iae.key');
 
-Route::middleware(['iae.key', 'sso.role'])->prefix('v1')->group(function (): void {
-    Route::get('/checkouts', [CheckoutController::class, 'index']);
-    Route::post('/checkouts', [CheckoutController::class, 'store']);
-    Route::get('/checkouts/{checkout}', [CheckoutController::class, 'show']);
+Route::middleware(['iae.key', 'sso.role'])->group(function (): void {
+    // Checkout routes (singular per kontrak dosen)
+    Route::get('/checkout', [CheckoutController::class, 'index']);
+    Route::post('/checkout', [CheckoutController::class, 'store']);
+    Route::get('/checkout/{checkout}', [CheckoutController::class, 'show']);
 
+    // Payment routes (singular per kontrak dosen)
     Route::get('/payment/methods', [PaymentController::class, 'methods']);
-    Route::post('/payments', [PaymentController::class, 'store']);
-    Route::get('/payments/{payment}', [PaymentController::class, 'show']);
-    Route::get('/payments/{payment}/status', [PaymentController::class, 'status']);
-    Route::post('/payments/confirm', [PaymentController::class, 'confirm']);
+    Route::post('/payment', [PaymentController::class, 'store']);
+    Route::get('/payment/{payment}', [PaymentController::class, 'show']);
+    Route::get('/payment/{payment}/status', [PaymentController::class, 'status']);
+    Route::post('/payment/confirm', [PaymentController::class, 'confirm']);
 
+    // Order routes (plural per kontrak dosen)
     Route::get('/orders', [OrderController::class, 'index']);
     Route::post('/orders', [OrderController::class, 'store'])->middleware('sso.role:customer,system,admin');
     Route::get('/orders/{order}', [OrderController::class, 'show']);

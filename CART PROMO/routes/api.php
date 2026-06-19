@@ -10,6 +10,8 @@ Route::prefix('v1/auth')->group(function () {
     Route::post('/login', [AuthController::class, 'login']);
 });
 
+
+
 // Protected auth routes
 Route::prefix('v1/auth')->middleware('jwt.auth')->group(function () {
     Route::get('/me', [AuthController::class, 'me']);
@@ -20,15 +22,14 @@ Route::prefix('v1')->middleware('jwt.auth')->group(function () {
 
     Route::get('/products', [CartController::class, 'products']);
 
+    // Cart routes (sesuai kontrak dosen)
+    Route::get('/carts', [CartController::class, 'index']);
     Route::post('/carts', [CartController::class, 'store']);
-
     Route::delete('/carts/{id}', [CartController::class, 'destroy']);
-
     Route::get('/carts/{id}', [CartController::class, 'show']);
 
-    Route::get('/promo', [PromoController::class, 'index']);
-
-    Route::get('/promo/{id}', [PromoController::class, 'show']);
-
-    Route::post('/promo/apply', [PromoController::class, 'apply']);
+    // Promo routes (jamak: promos, sesuai kontrak dosen)
+    Route::get('/promos', [PromoController::class, 'index']);
+    Route::get('/promos/{id}', [PromoController::class, 'show']);
+    Route::post('/promos/apply', [PromoController::class, 'apply']);
 });

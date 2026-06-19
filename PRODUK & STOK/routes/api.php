@@ -20,7 +20,7 @@ Route::middleware('apikey')->prefix('v1')->group(function () {
     Route::get('/products/{id}', [ProductController::class, 'show']);
     Route::get('/products/{id}/stock', [ProductController::class, 'stock']);
 
-    Route::put('/products/{id}/update', [ProductController::class, 'updateStock']);
+    Route::put('/products/stock/update', [ProductController::class, 'updateStock']);
 
 });
 

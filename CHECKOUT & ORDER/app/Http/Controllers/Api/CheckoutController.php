@@ -26,7 +26,7 @@ class CheckoutController extends Controller
     {
         $validated = $request->validate([
             'user_id' => ['required', 'integer', 'min:1'],
-            'cart_id' => ['nullable', 'string', 'max:100'],
+            'cart_id' => ['nullable'],
             'shipping_address' => ['required', 'string', 'max:1000'],
             'payment_method' => ['required', 'string', Rule::in($this->paymentMethods())],
             'items' => ['nullable', 'array', 'min:1'],

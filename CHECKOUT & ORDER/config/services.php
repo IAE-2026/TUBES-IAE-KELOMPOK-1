@@ -47,6 +47,7 @@ return [
         'api_key' => env('IAE_CENTRAL_API_KEY'),
         'bearer_token' => env('IAE_CENTRAL_BEARER_TOKEN'),
         'token_url' => env('IAE_CENTRAL_TOKEN_URL', 'https://iae-sso.virtualfri.id/api/v1/auth/token'),
+        'nim' => env('IAE_NIM', '102022400268'),
         'timeout' => env('IAE_CENTRAL_TIMEOUT', env('SERVICE_HTTP_TIMEOUT', 5)),
     ],
 

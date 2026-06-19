@@ -36,6 +36,7 @@ class IaeCentralTokenClient
             ->acceptJson()
             ->post((string) config('services.central.token_url'), [
                 'api_key' => $apiKey,
+                'nim'     => (string) config('services.central.nim', env('IAE_NIM', '102022400268')),
             ]);
 
         if (! $response->successful()) {
