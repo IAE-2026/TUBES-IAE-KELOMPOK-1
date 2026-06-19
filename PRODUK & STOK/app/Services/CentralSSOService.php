@@ -11,6 +11,7 @@ class CentralSSOService
 {
     protected static $baseUrl = 'https://iae-sso.virtualfri.id';
     protected static $apiKey = 'KEY-MHS-282';
+    protected static $nim = '102022400191';
     protected static $teamId = 'TEAM-01'; // From task requirements/identity
 
     /**
@@ -19,10 +20,14 @@ class CentralSSOService
     public static function getM2MToken(): string
     {
         return Cache::remember('sso_m2m_token', 3000, function () {
+            $apiKey = env('SSO_API_KEY', self::$apiKey);
+            $nim = env('SSO_NIM', self::$nim);
+
             $response = Http::withHeaders([
                 'Content-Type' => 'application/json',
             ])->post(self::$baseUrl . '/api/v1/auth/token', [
-                'api_key' => self::$apiKey,
+                'api_key' => $apiKey,
+                'nim' => $nim,
             ]);
 
             if (!$response->successful()) {
