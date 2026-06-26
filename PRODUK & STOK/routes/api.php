@@ -20,7 +20,7 @@ Route::middleware('apikey')->prefix('v1')->group(function () {
     Route::get('/products/{id}', [ProductController::class, 'show']);
     Route::get('/products/{id}/stock', [ProductController::class, 'stock']);
 
-    Route::put('/products/stock/update', [ProductController::class, 'updateStock']);
+    Route::put('/products/{id}/update', [ProductController::class, 'updateStock']);
 
 });
 
@@ -29,9 +29,15 @@ Route::middleware('sso')->prefix('v1')->group(function () {
         return response()->json([
             'status' => 'success',
             'message' => 'SSO authentication successful',
-            'user' => auth()->user(),
-            'roles' => auth()->user()->roles,
-            'token_payload' => $request->attributes->get('sso_payload')
+            'data' => [
+                'user' => auth()->user(),
+                'roles' => auth()->user()->roles,
+                'token_payload' => $request->attributes->get('sso_payload')
+            ],
+            'meta' => [
+                'service_name' => 'Product-Service',
+                'api_version' => 'v1'
+            ]
         ]);
     });
 

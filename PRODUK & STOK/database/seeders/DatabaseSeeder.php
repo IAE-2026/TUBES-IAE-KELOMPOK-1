@@ -15,11 +15,64 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        // Seed Test User
+        User::firstOrCreate(
+            ['email' => 'test@example.com'],
+            [
+                'name' => 'Test User',
+                'password' => bcrypt('password123')
+            ]
+        );
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+        // Seed Sample Products
+        \App\Models\Product::firstOrCreate(
+            ['sku' => 'SKU-001'],
+            [
+                'name' => 'Sepatu Compass',
+                'description' => 'Sepatu canvas berkualitas tinggi buatan lokal.',
+                'price' => 450000.00,
+                'stock' => 35,
+            ]
+        );
+
+        \App\Models\Product::firstOrCreate(
+            ['sku' => 'BK-LAR-011'],
+            [
+                'name' => 'Buku Pemrograman Laravel',
+                'description' => 'Panduan lengkap membangun REST API dan GraphQL dengan Laravel.',
+                'price' => 125000.00,
+                'stock' => 50,
+            ]
+        );
+
+        \App\Models\Product::firstOrCreate(
+            ['sku' => 'LP-ASUS-102'],
+            [
+                'name' => 'Laptop ASUS Vivobook',
+                'description' => 'Laptop tipis dan ringan untuk produktivitas harian.',
+                'price' => 8500000.00,
+                'stock' => 12,
+            ]
+        );
+
+        \App\Models\Product::firstOrCreate(
+            ['sku' => 'MJ-WOOD-301'],
+            [
+                'name' => 'Meja Kerja Minimalis',
+                'description' => 'Meja kerja kayu jati dengan desain modern minimalis.',
+                'price' => 650000.00,
+                'stock' => 8,
+            ]
+        );
+
+        \App\Models\Product::firstOrCreate(
+            ['sku' => 'HP-SAMS-051'],
+            [
+                'name' => 'Smartphone Samsung Galaxy A54',
+                'description' => 'Smartphone kelas menengah dengan kamera 50MP dan layar Super AMOLED.',
+                'price' => 5200000.00,
+                'stock' => 15,
+            ]
+        );
     }
 }

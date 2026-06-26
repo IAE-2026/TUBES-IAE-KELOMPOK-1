@@ -23,7 +23,6 @@ class CentralSSOService
                 'Content-Type' => 'application/json',
             ])->post(self::$baseUrl . '/api/v1/auth/token', [
                 'api_key' => self::$apiKey,
-                'nim'     => env('IAE_NIM', '102022400191'),
             ]);
 
             if (!$response->successful()) {
