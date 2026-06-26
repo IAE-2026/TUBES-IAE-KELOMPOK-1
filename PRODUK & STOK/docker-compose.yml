@@ -1,11 +1,8 @@
 services:
   app:
     build: .
-    container_name: produk-stok-service
     ports:
       - "8000:8000"
-    volumes:
-      - .:/app
     depends_on:
       mysql:
         condition: service_healthy
@@ -24,7 +21,6 @@ services:
 
   mysql:
     image: mysql:8.0
-    container_name: produk-stok-mysql
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: root123
